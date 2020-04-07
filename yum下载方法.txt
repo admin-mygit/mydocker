@@ -1,0 +1,66 @@
+yum命令
+
+//下载软件包，并把依赖包一并下载下来。在指定软件包下载后所放目录/opt
+[root@vip ~]# yum install yum-plugin-downloadonly				//无法使用--downloadonly，需要安装此包需（外网下载）
+
+[root@vip ~]# mkdir /opt/{cobbler,fence-agents,wireshark}
+[root@vip ~]# yum install --downloadonly --downloaddir=/opt/fence-agents fence-agents
+[root@vip ~]# yum install --downloadonly --downloaddir=/opt/cobbler cobbler cobbler-web
+[root@vip ~]# yum install --downloadonly --downloaddir=/opt/wireshark wireshark wireshark-gnome
+
+[root@cdx ~]# wget http://mirrors.163.com/.help/CentOS6-Base-163.repo
+[root@cdx ~]# yum install --downloadonly --downloaddir=/opt gcc gcc-c++
+[root@cdx ~]# yum install --downloadonly --downloaddir=/opt pcre-devel zlib-devel 
+
+//只下载指定的包，不会把该包依赖的包都下载下来的。
+[root@vip ~]# yumdownloader cobbler cobbler-web
+
+yum provides */ifconfig
+
+yum-config-manager --add-repo 				//快速添加一个在线yum仓库
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+provides:查找提供给定值的包
+*/ifconfig:*通配符，匹配包含开头为任意字符包含*/ifconfig的名称
+
+createrepo --update /var/www/html/software
+
+CentOS 7
+
+在安装桌面环境的情况下，设置为文本模式
+
+[root@vip ~]# systemctl get-default					//查看模式类型
+[root@vip ~]# systemctl set-default multi-user.target		//从桌面(5)换到文本模式(3)
+[root@vip ~]# systemctl set-default graphical.target		//从桌面(3)换到文本模式(5)
+
+[root@vip ~]# systemctl list-unit-files |grep enabled		//查看已经启动的服务
+
+cups.path                                     enabled 
+
+[root@vip ~]# hostnamectl set-hostname hostname			//永久修改主机名
+
+
+[root@vip ~]# blkid /dev/sdb1      
+/dev/sdb1: UUID="61a5e59d-92d3-458d-ac09-7d945469cda6" TYPE="xfs"
+
+[root@vip ~]# echo "/dev/sdb1 /file xfs defaults 0 0" >> /etc/fstab
+
+[root@vip ~]# mount -a
+
+[root@vip ~]# du -h /home/daygeek/Documents/ | sort -rh | head -20		//查看目录下的文件大小
+ls -lh | grep ^d
+du -hs /home/daygeek/Documents
+du -h --max-depth=0 /home/daygeek/Documents/
+du -h /home/daygeek/Documents/ | sort -rh | head -20
+du -hs /home/daygeek/Documents/* | sort -rh | head -10
+du -hS /home/daygeek/Documents/ | sort -rh | head -20
+du -h --max-depth=1 /home/daygeek/Documents/
+du -hsc /home/daygeek/Documents/* | sort -rh | head -10
+
+[root@centos_a ~]# ifconfig ens33|grep -w inet|awk '{print $2}'|awk -F '/' '{print $1}' 
+172.118.0.80
+
+查看服务启动项
+
+[root@vip ~]# systemctl list-unit-files |grep enable |grep postfix
+postfix.service                               enabled 
